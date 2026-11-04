@@ -33,9 +33,135 @@ Program to print the DatabaseTable using the firebasedatabase”.
 Developed by:
 Registeration Number :
 */
-```
+``
+ACTIVITY MAIN:`
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Firebase"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textColor="#1565C0"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="30dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter Student Name"
+        android:textSize="16sp"
+        android:textColor="#333333"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/nameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your name"
+        android:inputType="textPersonName"
+        android:padding="12dp"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save to Firebase" />
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="16sp"
+        android:textColor="#2E7D32"
+        android:gravity="center"
+        android:layout_marginTop="24dp" />
+
+</LinearLayout>
+
+MAIN ACTIVITY.JAVA
+package com.example.firebase;
+
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText nameInput;
+    Button saveButton;
+    TextView resultText;
+
+    DatabaseReference database;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Connect the XML views
+        nameInput = findViewById(R.id.nameInput);
+        saveButton = findViewById(R.id.saveButton);
+        resultText = findViewById(R.id.resultText);
+
+        // Connect to Firebase Realtime Database
+        database = FirebaseDatabase.getInstance()
+                .getReference("Students");
+
+        // Save data when the button is clicked
+        saveButton.setOnClickListener(v -> {
+
+            String name = nameInput.getText().toString().trim();
+
+            if (name.isEmpty()) {
+                nameInput.setError("Please enter a name");
+                return;
+            }
+
+            database.child("101").child("name")
+                    .setValue(name)
+                    .addOnSuccessListener(unused -> {
+                        resultText.setText("Saved successfully: " + name);
+                        Toast.makeText(
+                                MainActivity.this,
+                                "Data saved to Firebase",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    })
+                    .addOnFailureListener(error -> {
+                        Toast.makeText(
+                                MainActivity.this,
+                                "Error: " + error.getMessage(),
+                                Toast.LENGTH_LONG
+                        ).show();
+                    });
+        });
+    }
+}
+
+
 
 ## OUTPUT
+<img width="707" height="347" alt="image" src="https://github.com/user-attachments/assets/60dadbca-9940-4bc6-b9b0-9d964c68308c" />
+
 
 
 
